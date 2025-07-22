@@ -39,7 +39,7 @@ public class ValidationExceptionHandler {
 	
 	@ExceptionHandler(NumberFormatException.class)
 	public ResponseEntity<Map<String, Object>> handleNumberFormatException(NumberFormatException ex) {
-		
+
 		Map<String, Object> responseBody = new HashMap<>();
 		responseBody.put("type", "custom exception");
 		responseBody.put("status", HttpStatus.BAD_REQUEST.value());
@@ -49,8 +49,9 @@ public class ValidationExceptionHandler {
 				.body(responseBody);
 
 		if (log.isErrorEnabled()) {
-			log.error("handleNumberFormatException Exception handled: {}", responseEntity);
+			log.error("NumberFormatException Exception handled!!!!: {}", responseEntity);
 		}
 		return responseEntity;
+
 	}
 }
