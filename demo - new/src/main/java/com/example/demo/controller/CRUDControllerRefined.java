@@ -17,16 +17,16 @@ import com.example.demo.model.Item;
 import com.example.demo.service.ItemService;
 import com.example.demo.util.ResponseEntityUtil;
 import com.example.demo.validation.ItemValidation;
-import com.example.demo.service.ItemServiceAnalysis;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 @RestController
-@RequestMapping("/demo/v1") // Base path for all endpoints in this controller
-public class CRUDController {
+@RequestMapping("/demo/v2")
+public class CRUDControllerRefined {
 
-	private final ItemService itemService;
-	private final ItemServiceAnalysis itemServiceAnalysis;
+    private final ItemService itemService;
+
+    public CRUDControllerRefined(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     // --- CREATE (Auto-generated ID) ---
     @PostMapping
@@ -44,14 +44,11 @@ public class CRUDController {
 
     // --- READ (By ID) ---
     @GetMapping("/{id}")
-    public ResponseEntity<String> getItemById(@PathVariable String id) {
-    	ItemValidation.parseAndValidateLongId(id);
-
-        return itemService.getItemById(Long.valueOf(id))
+    public ResponseEntity<String> getItemById(@PathVariable Long id) {
+        return itemService.getItemById(id)
                 .map(item -> ResponseEntityUtil.buildResponse("Found item with ID: " + item.id() + " and data: " + item.value(), HttpStatus.OK))
                 .orElseGet(() -> ResponseEntityUtil.buildResponse("Item with ID: " + id + " not found.", HttpStatus.NOT_FOUND));
     }
-    
 
     // --- UPDATE ---
     @PutMapping("/{id}")
@@ -70,11 +67,5 @@ public class CRUDController {
                 : ResponseEntityUtil.buildResponse("Item with ID: " + id + " not found for deletion.", HttpStatus.NOT_FOUND);
     }
 
-	
-	// --- GET ID WITH PASSING PARAMETER OF "demo" ---
-	@GetMapping("/demoOnly")
-	public ResponseEntity<List<Item>> getItemsWithDemo() {
-		return ResponseEntity.ok(itemServiceAnalysis.getAllItemsWithDemo());
-    }
-	
+
 }
